@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FeeManager — Login | Educational Fee Management System</title>
+  <meta name="description" content="Secure login to FeeManager — the modern fee management portal for students, staff, and administrators.">
+  <link rel="stylesheet" href="css/style.css?v=light-theme">
+  <style>
+    /* Login-specific animations */
+    .login-card { animation: fadeIn .5s var(--ease) both; }
+    .demo-cred-card { animation: slideIn .35s var(--ease) both; }
+    .demo-cred-card:nth-child(1){ animation-delay:.1s }
+    .demo-cred-card:nth-child(2){ animation-delay:.2s }
+    .demo-cred-card:nth-child(3){ animation-delay:.3s }
+
+    /* Floating blobs */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: .12;
+      animation: blobFloat 8s ease-in-out infinite alternate;
+    }
+    .blob-1 { width:400px;height:400px;background:var(--blue);top:-80px;left:-80px; animation-delay:0s; }
+    .blob-2 { width:300px;height:300px;background:var(--purple);bottom:0;left:30%; animation-delay:3s; }
+    .blob-3 { width:250px;height:250px;background:var(--amber);top:20%;right:10%; animation-delay:1.5s; }
+    @keyframes blobFloat { from{transform:translate(0,0) scale(1)} to{transform:translate(20px,30px) scale(1.05)} }
+
+    .or-divider {
+      display:flex;align-items:center;gap:1rem;margin:1.25rem 0;color:var(--text-muted);font-size:.8rem;
+    }
+    .or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:var(--border);}
+
+    /* Input wrapper for password toggle */
+    .pw-wrapper { position:relative; }
+    .pw-wrapper .form-control { padding-right:2.75rem; }
+  </style>
+</head>
+<body>
+  <div class="login-page">
+    <div class="login-bg"></div>
+    <div class="login-bg-grid"></div>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <!-- Left: Login Form -->
+    <div class="login-left">
+      <div class="login-brand">
+        <div class="login-brand-logo">🏛️</div>
+        <div class="login-brand-name">
+          FeeManager
+          <span>Educational Portal v1.0</span>
+        </div>
+      </div>
+
+      <div class="login-card">
+        <h2>Welcome back</h2>
+        <p>Sign in to access your dashboard</p>
+
+        <div class="login-error" id="login-error" role="alert"></div>
+
+        <form id="login-form" onsubmit="handleLogin(event)" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="email">Email Address or Username</label>
+            <input
+              type="text"
+              class="form-control"
+              id="email"
+              placeholder="Enter your email address or username"
+              autocomplete="username"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="password">Password</label>
+            <div class="pw-wrapper">
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required>
+              <button type="button" class="password-toggle" id="pw-toggle" onclick="togglePassword()" title="Show/hide password">👁</button>
+            </div>
+          </div>
+
+          <div class="d-flex justify-between items-center mb-4">
+            <label class="d-flex items-center gap-2 cursor-pointer" style="font-size:.8125rem;color:var(--text-secondary)">
+              <input type="checkbox" id="remember-me" checked style="accent-color:var(--blue)">
+              <span>Remember me</span>
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full btn-lg" id="login-btn">
+            Sign In
+          </button>
+        </form>
+
+          <div class="login-role-switch" aria-label="Choose login type">
+            <button type="button" class="login-role-option active" data-login-role="admin-staff" onclick="selectLoginRole('admin-staff')">Admin / Staff Login</button>
+            <button type="button" class="login-role-option" data-login-role="student" onclick="selectLoginRole('student')">Student Login</button>
+          </div>
+
+        <div class="login-footer">
+          <p style="color:var(--text-muted);margin-bottom:.5rem">
+            Global Institute of Technology &copy; 2026
+          </p>
+          <div style="display:flex;justify-content:center;gap:1rem;font-size:.75rem;flex-wrap:wrap">
+            <a href="signup.html" style="color:var(--text-muted);text-decoration:underline">Create an account</a>
+            <span style="color:var(--text-dim)">•</span>
+            <span style="color:var(--text-muted)">Secure Portal</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="login-right">
+      <div class="login-right-inner">
+        <h2>Fee Management System</h2>
+        <p>
+          A complete digital solution for managing student fee collection, tracking dues, generating receipts, and producing real-time financial reports.
+        </p>
+
+        <!-- Feature Highlights -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem">
+          <div style="display:flex;align-items:center;gap:.625rem;font-size:.8125rem;color:var(--text-secondary)"><span>📊</span><span>Real-time Analytics</span></div>
+          <div style="display:flex;align-items:center;gap:.625rem;font-size:.8125rem;color:var(--text-secondary)"><span>💳</span><span>Online Payments</span></div>
+          <div style="display:flex;align-items:center;gap:.625rem;font-size:.8125rem;color:var(--text-secondary)"><span>🧾</span><span>PDF Receipts</span></div>
+          <div style="display:flex;align-items:center;gap:.625rem;font-size:.8125rem;color:var(--text-secondary)"><span>⚠️</span><span>Defaulter Tracking</span></div>
+          <div style="display:flex;align-items:center;gap:.625rem;font-size:.8125rem;color:var(--text-secondary)"><span>🔔</span><span>Smart Reminders</span></div>
+          <div style="display:flex;align-items:center;gap:.625rem;font-size:.8125rem;color:var(--text-secondary)"><span>🔒</span><span>Role-based Access</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="js/data.js?v=secure-login-2"></script>
+  <script>
+    // ─── LOGIN HANDLER ──────────────────────────────────
+    let selectedLoginRole = 'admin-staff';
+
+    function selectLoginRole(role) {
+      selectedLoginRole = role;
+      document.querySelectorAll('.login-role-option').forEach(button => {
+        button.classList.toggle('active', button.dataset.loginRole === role);
+      });
+      document.getElementById('email').focus();
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const identifier = document.getElementById('email').value.trim();
+      const password   = document.getElementById('password').value;
+      const btn        = document.getElementById('login-btn');
+      const errEl      = document.getElementById('login-error');
+
+      if (!identifier || !password) {
+        showError('Please enter your email/username and password.');
+        return;
+      }
+
+      // Show loading state
+      btn.disabled = true;
+      btn.innerHTML = '<div class="spinner"></div> Signing in...';
+      errEl.classList.remove('show');
+
+      setTimeout(() => {
+        try {
+          const result = FMS.authenticate(identifier, password);
+          if (result.success) {
+            const roleAllowed = selectedLoginRole === 'student'
+              ? result.user.role === 'student'
+              : ['admin', 'staff', 'accountant'].includes(result.user.role);
+            if (!roleAllowed) {
+              showError(selectedLoginRole === 'student'
+                ? 'Please use Student Login for a student account.'
+                : 'Please use Admin / Staff Login for an administrator or staff account.');
+              btn.disabled = false;
+              btn.innerHTML = 'Sign In';
+              return;
+            }
+            sessionStorage.setItem('fms_session', JSON.stringify(result.user));
+            btn.innerHTML = '✓ Redirecting...';
+            showToast(`Welcome, ${result.user.name.split(' ')[0]}! 👋`, 'success');
+            setTimeout(() => { window.location.href = 'dashboard.html'; }, 300);
+          } else {
+            showError(result.msg);
+            btn.disabled = false;
+            btn.innerHTML = 'Sign In';
+            // Shake effect
+            const card = document.querySelector('.login-card');
+            if (card) {
+              card.style.animation = 'none'; void card.offsetWidth;
+              card.style.animation = 'shake .4s ease';
+            }
+          }
+        } catch (err) {
+          console.error('Login error:', err);
+          showError('An unexpected error occurred during sign-in.');
+          btn.disabled = false;
+          btn.innerHTML = 'Sign In';
+        }
+      }, 350);
+    }
+
+    function showError(msg) {
+      const el = document.getElementById('login-error');
+      el.textContent = msg;
+      el.classList.add('show');
+    }
+
+    function togglePassword() {
+      const inp = document.getElementById('password');
+      const btn = document.getElementById('pw-toggle');
+      if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+      else { inp.type = 'password'; btn.textContent = '👁'; }
+    }
+
+    // Toast for login page
+    function showToast(msg, type = 'info') {
+      const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
+      const tc = document.getElementById('toast-container');
+      if (!tc) return;
+      const t = document.createElement('div');
+      t.className = `toast ${type}`;
+      t.innerHTML = `<span class="toast-icon">${icons[type] || 'ℹ️'}</span><span class="toast-msg">${msg}</span>`;
+      tc.appendChild(t);
+      setTimeout(() => { t.classList.add('removing'); setTimeout(() => t.remove(), 300); }, 3000);
+    }
+
+    // Session check: allow ?logout=1 or ?switch=1 to prevent redirect loop
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('logout') || urlParams.get('switch')) {
+      sessionStorage.removeItem('fms_session');
+    } else if (sessionStorage.getItem('fms_session')) {
+      window.location.href = 'dashboard.html';
+    }
+
+    // Shake animation
+    const style = document.createElement('style');
+    style.textContent = '@keyframes shake{0%,100%{transform:translateX(0)}10%,30%,50%,70%,90%{transform:translateX(-6px)}20%,40%,60%,80%{transform:translateX(6px)}}';
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>

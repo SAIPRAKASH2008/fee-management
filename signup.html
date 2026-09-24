@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FeeManager — Sign Up</title>
+  <link rel="stylesheet" href="css/style.css?v=light-theme">
+  <style>
+    .login-page { min-height:100vh; }
+    .login-card { max-width: 520px; }
+    .inline-row { display:grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 640px) { .inline-row { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="login-page">
+    <div class="login-bg"></div>
+    <div class="login-bg-grid"></div>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <div class="login-left" style="width:min(100%,560px)">
+      <div class="login-brand">
+        <div class="login-brand-logo">🏛️</div>
+        <div class="login-brand-name">
+          FeeManager
+          <span>Educational Portal v1.0</span>
+        </div>
+      </div>
+
+      <div class="login-card">
+        <h2>Create your account</h2>
+        <p>Register as a new student</p>
+
+        <div class="login-error" id="signup-error" role="alert"></div>
+
+        <form id="signup-form" onsubmit="handleSignup(event)" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="name">Full Name</label>
+            <input type="text" class="form-control" id="name" placeholder="Enter your full name" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="username">Username</label>
+            <input type="text" class="form-control" id="username" placeholder="Choose a username" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="email">Email Address</label>
+            <input type="email" class="form-control" id="email" placeholder="Enter your email address" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="password">Password</label>
+            <div class="pw-wrapper">
+              <input type="password" class="form-control" id="password" placeholder="Create a password" required>
+              <button type="button" class="password-toggle" id="pw-toggle" onclick="togglePassword()" title="Show/hide password">👁</button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full btn-lg" id="signup-btn">Create Account</button>
+        </form>
+
+        <div class="login-footer" style="margin-top:1.5rem">
+          <p style="color:var(--text-muted);margin-bottom:.5rem">Already have an account?</p>
+          <div style="display:flex;justify-content:center;gap:1rem;font-size:.75rem;flex-wrap:wrap">
+            <a href="index.html" style="color:var(--text-muted);text-decoration:underline">Back to login</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="js/data.js"></script>
+  <script>
+    function showError(msg) {
+      const el = document.getElementById('signup-error');
+      el.textContent = msg;
+      el.classList.add('show');
+    }
+
+    function showToast(msg, type = 'success') {
+      const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
+      const tc = document.getElementById('toast-container');
+      if (!tc) return;
+      const t = document.createElement('div');
+      t.className = `toast ${type}`;
+      t.innerHTML = `<span class="toast-icon">${icons[type] || 'ℹ️'}</span><span class="toast-msg">${msg}</span>`;
+      tc.appendChild(t);
+      setTimeout(() => { t.classList.add('removing'); setTimeout(() => t.remove(), 300); }, 3000);
+    }
+
+    function togglePassword() {
+      const inp = document.getElementById('password');
+      const btn = document.getElementById('pw-toggle');
+      if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+      else { inp.type = 'password'; btn.textContent = '👁'; }
+    }
+
+    function handleSignup(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const username = document.getElementById('username').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const role = 'student';
+      const btn = document.getElementById('signup-btn');
+      const errEl = document.getElementById('signup-error');
+
+      if (!name || !username || !email || !password) {
+        showError('Please fill in all required fields.');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<div class="spinner"></div> Creating account...';
+      errEl.classList.remove('show');
+
+      const result = FMS.registerUser({ name, username, email, password, role });
+
+      setTimeout(() => {
+        if (!result.success) {
+          showError(result.msg);
+          btn.disabled = false;
+          btn.innerHTML = 'Create Account';
+          return;
+        }
+
+        showToast('Account created successfully. You can sign in now.', 'success');
+        btn.innerHTML = '✓ Account created';
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 900);
+      }, 350);
+    }
+  </script>
+</body>
+</html>
