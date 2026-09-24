@@ -5,6 +5,7 @@
 
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -27,6 +28,9 @@ app.use('/api/fees', feeRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/reports', reportRoutes);
 
+// Serve the frontend from the same origin when the API is deployed as one service.
+app.use(express.static(path.join(__dirname, '..')));
+
 // Health check & Info
 app.get('/api/health', (req, res) => {
   res.json({
@@ -39,22 +43,7 @@ app.get('/api/health', (req, res) => {
 
 // Root
 app.get('/', (req, res) => {
-  res.send(`
-    <html>
-      <head><title>FMS Backend API</title></head>
-      <body style="font-family:sans-serif;padding:2rem;background:#0f172a;color:#f8fafc">
-        <h1>🏛️ Fee Management System (FMS) — REST API</h1>
-        <p>API Server is running successfully on port ${PORT}.</p>
-        <ul>
-          <li><strong>Auth:</strong> <code>POST /api/auth/login</code></li>
-          <li><strong>Students:</strong> <code>GET /api/students</code>, <code>POST /api/students</code></li>
-          <li><strong>Fee Structures:</strong> <code>GET /api/fees/structures</code></li>
-          <li><strong>Payments:</strong> <code>GET /api/payments</code>, <code>POST /api/payments</code></li>
-          <li><strong>Reports:</strong> <code>GET /api/reports/stats</code>, <code>GET /api/reports/defaulters</code></li>
-        </ul>
-      </body>
-    </html>
-  `);
+  res.sendFile(path.join(__dirname, '..', 'index.html'));
 });
 
 app.listen(PORT, () => {
